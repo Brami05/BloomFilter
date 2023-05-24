@@ -54,7 +54,7 @@ BITS hashUno(char *contra) {
 BITS hashDos(char *contra) {
 
   int a = A*2;
-  int b = B*3;
+  int b = B*2;
 
   BITS x = strAint(contra);
 
