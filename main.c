@@ -54,7 +54,7 @@ BITS hashUno(char *contra) {
 BITS hashDos(char *contra) {
 
   int a = A*2;
-  int b = B*3;
+  int b = B*2;
 
   BITS x = strAint(contra);
 
@@ -131,7 +131,7 @@ BITS *newBarray(){
   //cantidad de pedazos de 32 bits de memoria  que ocupamos
   size_t memory_size = M/tamano;
 
-  //Verifica si el tamano "M" del arreglo es múltiplo de 32
+  //Verifica si el tamano "M" del arreglo es m≈ìltiplo de 32
   if(M % tamano != 0){
     memory_size += 1; //Agrega un bloque mas a la memoria alojada
   }
@@ -159,11 +159,11 @@ bool obtenerBit(BITS *barray, BITS hash) {
   size_t bit = hash % tamano;
 
   //a 'byte' le quita (hace un shift de izq a der) la cantidad de bits
-  //obtenidos en la variable 'bit', dejando así como primer bit al que
+  //obtenidos en la variable 'bit', dejando as‚Äô como primer bit al que
   //queremos comparar.
-  //Después compara lo que nos quedo con 1 usando el operador '&' o
-  //and para bits, el cual devuelve todos los bits que estén encendidos
-  //tanto en 'byte' después del shift como en 1 (el cual únicamente
+  //Despu≈Ωs compara lo que nos quedo con 1 usando el operador '&' o
+  //and para bits, el cual devuelve todos los bits que est≈Ωn encendidos
+  //tanto en 'byte' despu≈Ωs del shift como en 1 (el cual ≈ìnicamente
   //tiene encendido el primer bit de der a izq).
   //con esto compara si el bit esta en 1 o en 0 y lo devuelve
   return (byte>>bit) & 1;
@@ -178,7 +178,7 @@ void asignarBit(BITS *barray, BITS hash){
   //en este caso al extraer el pedazo de memoria de nuestro arreglo de
   //bits utilizamos un apuntador, pues en este caso no shifteamos este,
   //si no que solo comparamos entre dos chunks y copia al apuntador
-  //todos los bits que estén como 1 en ambos chunks
+  //todos los bits que est≈Ωn como 1 en ambos chunks
   BITS *byte = &(barray[chunk]);
 
   //posicion del bit dentro del pedazo de memoria (offset)
@@ -186,9 +186,9 @@ void asignarBit(BITS *barray, BITS hash){
 
   //asignamos a 1 el bit, para ello
   //toma un chunk del tamano de BITS y lo inicializa en 1, para
-  //después shiftearlo (de der a izq) las veces que indique 'bit',       //dejando así en 1 el bit deseado.
-  //después compara este chunk con el que apunta 'byte' mediante el
-  //operador logico '|' o or, copeando así cualquier bit en 1 de
+  //despu≈Ωs shiftearlo (de der a izq) las veces que indique 'bit',       //dejando as‚Äô en 1 el bit deseado.
+  //despu≈Ωs compara este chunk con el que apunta 'byte' mediante el
+  //operador logico '|' o or, copeando as‚Äô cualquier bit en 1 de
   //ambos chunks en el arreglo original
   *byte |= ((BITS)1) << bit;
 }
@@ -243,7 +243,7 @@ void insertar(filtro_bloom *filter, const char *contra){
   }
 }
 
-//funcion para buscar algún elemento en el filtro
+//funcion para buscar alg≈ìn elemento en el filtro
 bool buscar(filtro_bloom *filter, const char *contra){
 
   BITS hash = 0;
@@ -253,12 +253,12 @@ bool buscar(filtro_bloom *filter, const char *contra){
     hash = filter->hash_functions[i](contra);
 
     if(!obtenerBit(filter->barray, hash)){
-      //si algún hash esta en 0, entonces no esta en el arreglo
+      //si alg≈ìn hash esta en 0, entonces no esta en el arreglo
       return false;
     }
   }
 
-  return true; //si sale del ciclo estamos casi seguros que sí esta
+  return true; //si sale del ciclo estamos casi seguros que s‚Äô esta
 }
 
 //----------------------Lectura de archivos--------------------------
@@ -277,7 +277,7 @@ void readInsert(filtro_bloom *filtro, char* archive){
   char contra[30];//almacenara cada contrasena, una a la vez
   size_t contra_len = 30; //tamano de la contrasena actual
 
-  //ciclo que itera por cada línea del archivo txt
+  //ciclo que itera por cada l‚Äônea del archivo txt
   while (fgets(contra, contra_len, input) != NULL){
     //inserta al filtro la contrasena que esta leyendo
     insertar(filtro, contra);
@@ -294,7 +294,7 @@ void readSearch(filtro_bloom *filtro, char* archive){
   char contra[30];//almacenara cada contrasena, una a la vez
   size_t contra_len = 30; //tamano de la contrasena actual
 
-  //ciclo que itera por cada línea del archivo txt
+  //ciclo que itera por cada l‚Äônea del archivo txt
   while (fgets(contra, contra_len, input) != NULL){
     //buscar en el filtro la contrasena que esta leyendo
     if(buscar(filtro, contra)){
@@ -413,7 +413,7 @@ void tester(filtro_bloom *filtro, char *archive, char *archive2){
   float tn = 0; //true negatives
 
 
-  //ciclo que itera por cada línea del archivo a comprobar
+  //ciclo que itera por cada l‚Äônea del archivo a comprobar
   while(fgets(contra, contra_len, input) != NULL){
 
     //buscar en el filtro la contrasena que esta leyendo
@@ -456,7 +456,7 @@ int main(int argc, char *argv[]) {
   //leemos el archivo e insertamos sus datos en el filtro
   readInsert(filtro, "/Users/brami/Downloads/dump/datos_contras_insertar.txt");
 
-  //funcion para búsquedas por user input
+  //funcion para b≈ìsquedas por user input
   consoleConsulta(filtro);
 
   //Funcion para las pruebas
