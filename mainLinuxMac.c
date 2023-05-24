@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <string.h>
 #include <stdarg.h>
 
@@ -12,11 +13,11 @@
 #define NUM_FUNC 7
 #define tamano 32
 
-//Redefinici—n de variables
+//Redefiniciâ€”n de variables
 typedef uint32_t BITS; //BITS es un tipo de dato unsigned int que
                         //contiene 32bits o 4 bytes.
 
-//definimos un tipo de funci—n 'especial' para las hash, con un apuntador. Esto para agregarles un tipo de dato al insertarlas en la estructura del filtro bloom.
+//definimos un tipo de funciâ€”n 'especial' para las hash, con un apuntador. Esto para agregarles un tipo de dato al insertarlas en la estructura del filtro bloom.
 typedef BITS (*hashB_func)(const char *data);
 
 //------------------------ Funciones hash --------------------------
@@ -124,15 +125,15 @@ BITS hashSiete(char *contra) {
 
 //------------------------Arreglo de bits----------------------
 
-//Funci—n que crea el arreglo de bits
+//Funciâ€”n que crea el arreglo de bits
 BITS *newBarray(){
 
   //cantidad de pedazos de 32 bits de memoria  que ocupamos
   size_t memory_size = M/tamano;
 
-  //Verifica si el tamano "M" del arreglo es mœltiplo de 32
+  //Verifica si el tamano "M" del arreglo es mÅ“ltiplo de 32
   if(M % tamano != 0){
-    memory_size += 1; //Agrega un bloque m‡s a la memoria alojada
+    memory_size += 1; //Agrega un bloque mâ€¡s a la memoria alojada
   }
 
   //Reserva la memoria que acabamos de calcular e inicializa sus bits a 0
@@ -143,7 +144,7 @@ BITS *newBarray(){
 
 //----------Operaciones a nivel bits para el arreglo de bits---------
 
-//funci—n para saber si un bit est‡ en 0 o 1
+//funciâ€”n para saber si un bit estâ€¡ en 0 o 1
 bool obtenerBit(BITS *barray, BITS hash) {
 
   //pedazo de memoria en el que se encuentra el bit
@@ -154,21 +155,21 @@ bool obtenerBit(BITS *barray, BITS hash) {
   //queremos afectar el arreglo de bits real
   BITS byte = barray[chunk];
 
-  //posici—n del bit dentro del pedazo de memoria (offset)
+  //posiciâ€”n del bit dentro del pedazo de memoria (offset)
   size_t bit = hash % tamano;
 
   //a 'byte' le quita (hace un shift de izq a der) la cantidad de bits
-  //obtenidos en la variable 'bit', dejando as’ como primer bit al que
+  //obtenidos en la variable 'bit', dejando asâ€™ como primer bit al que
   //queremos comparar.
-  //DespuŽs compara lo que nos qued— con 1 usando el operador '&' o
-  //and para bits, el cual devuelve todos los bits que estŽn encendidos
-  //tanto en 'byte' despuŽs del shift como en 1 (el cual œnicamente
+  //DespuÅ½s compara lo que nos quedâ€” con 1 usando el operador '&' o
+  //and para bits, el cual devuelve todos los bits que estÅ½n encendidos
+  //tanto en 'byte' despuÅ½s del shift como en 1 (el cual Å“nicamente
   //tiene encendido el primer bit de der a izq).
-  //con esto compara si el bit est‡ en 1 o en 0 y lo devuelve
+  //con esto compara si el bit estâ€¡ en 1 o en 0 y lo devuelve
   return (byte>>bit) & 1;
 }
 
-//funci—n para asignar a 1 un bit
+//funciâ€”n para asignar a 1 un bit
 void asignarBit(BITS *barray, BITS hash){
 
   //pedazo de memoria en el que se encuentra el bit
@@ -177,22 +178,22 @@ void asignarBit(BITS *barray, BITS hash){
   //en este caso al extraer el pedazo de memoria de nuestro arreglo de
   //bits utilizamos un apuntador, pues en este caso no shifteamos este,
   //si no que solo comparamos entre dos chunks y copia al apuntador
-  //todos los bits que estŽn como 1 en ambos chunks
+  //todos los bits que estÅ½n como 1 en ambos chunks
   BITS *byte = &(barray[chunk]);
 
-  //posici—n del bit dentro del pedazo de memoria (offset)
+  //posiciâ€”n del bit dentro del pedazo de memoria (offset)
   size_t bit = hash % tamano;
 
   //asignamos a 1 el bit, para ello
   //toma un chunk del tamano de BITS y lo inicializa en 1, para
-  //despuŽs shiftearlo (de der a izq) las veces que indique 'bit',       //dejando as’ en 1 el bit deseado.
-  //despuŽs compara este chunk con el que apunta 'byte' mediante el
-  //operador l—gico '|' o or, copeando as’ cualquier bit en 1 de
+  //despuÅ½s shiftearlo (de der a izq) las veces que indique 'bit',       //dejando asâ€™ en 1 el bit deseado.
+  //despuÅ½s compara este chunk con el que apunta 'byte' mediante el
+  //operador lâ€”gico '|' o or, copeando asâ€™ cualquier bit en 1 de
   //ambos chunks en el arreglo original
   *byte |= ((BITS)1) << bit;
 }
 
-//----------------------Creaci—n del filtro-----------------------
+//----------------------Creaciâ€”n del filtro-----------------------
 
 //estructura del filtro bloom
 typedef struct{
@@ -200,7 +201,7 @@ typedef struct{
   hashB_func *hash_functions;
 } filtro_bloom;
 
-//funci—n creadora del filtro bloom
+//funciâ€”n creadora del filtro bloom
 filtro_bloom *newBloom(size_t num_functions, ...){
   //'...' representan las n funciones hash
 
@@ -212,7 +213,7 @@ filtro_bloom *newBloom(size_t num_functions, ...){
   filter->barray = newBarray();
   filter->hash_functions = malloc(sizeof(hashB_func)*num_functions);
 
-  //obtenemos nuestras funciones hash de los par‡metros y las metemos
+  //obtenemos nuestras funciones hash de los parâ€¡metros y las metemos
   //en la lista
   va_start(hashes, num_functions); //macro
 
@@ -230,7 +231,7 @@ filtro_bloom *newBloom(size_t num_functions, ...){
 
 //------------Funciones generales para manejar el filtro-----------
 
-//funci—n para insertar un nuevo elemento en el filtro
+//funciâ€”n para insertar un nuevo elemento en el filtro
 void insertar(filtro_bloom *filter, const char *contra){
 
   BITS hash = 0;
@@ -242,7 +243,7 @@ void insertar(filtro_bloom *filter, const char *contra){
   }
 }
 
-//funci—n para buscar algœn elemento en el filtro
+//funciâ€”n para buscar algÅ“n elemento en el filtro
 bool buscar(filtro_bloom *filter, const char *contra){
 
   BITS hash = 0;
@@ -252,64 +253,64 @@ bool buscar(filtro_bloom *filter, const char *contra){
     hash = filter->hash_functions[i](contra);
 
     if(!obtenerBit(filter->barray, hash)){
-      //si algœn hash est‡ en 0, entonces no est‡ en el arreglo
+      //si algÅ“n hash estâ€¡ en 0, entonces no estâ€¡ en el arreglo
       return false;
     }
   }
 
-  return true; //si sale del ciclo estamos casi seguros que s’ est‡
+  return true; //si sale del ciclo estamos casi seguros que sâ€™ estâ€¡
 }
 
 //----------------------Lectura de archivos--------------------------
 
-//funci—n para leer archivo e insertar los datos del archivo en el filtro
+//funciâ€”n para leer archivo e insertar los datos del archivo en el filtro
 void readInsert(filtro_bloom *filtro, char* archive){
 
   FILE *input = fopen(archive, "r"); //abre el archivo
 
   /*
-  Los siguientes son par‡metros que recibir‡ la funci—n getline,
-  con los cuales esta reservar‡ memoria din‡mica o un buffer para
-  leer los datos que reciba. La misma funci—n los modificar‡ acorde
+  Los siguientes son parâ€¡metros que recibirâ€¡ la funciâ€”n getline,
+  con los cuales esta reservarâ€¡ memoria dinâ€¡mica o un buffer para
+  leer los datos que reciba. La misma funciâ€”n los modificarâ€¡ acorde
   a sus necesidades. Al final este buffer debe ser liberado
   */
-  char *contra = NULL;//almacenar‡ cada contrase–a, una a la vez
-  size_t contra_len = 0; //tamano de la contrase–a actual
+  char *contra = NULL;//almacenarâ€¡ cada contraseâ€“a, una a la vez
+  size_t contra_len = 0; //tamano de la contraseâ€“a actual
 
-  //ciclo que itera por cada l’nea del archivo txt
+  //ciclo que itera por cada lâ€™nea del archivo txt
   while (getline(&contra, &contra_len, input) != -1){
-    //inserta al filtro la contrase–a que est‡ leyendo
+    //inserta al filtro la contraseâ€“a que estâ€¡ leyendo
     insertar(filtro, contra);
   }
 
   fclose(input); //cierra el archivo
-  free(contra); //libera la memoria din‡mica que us— el getline
+  free(contra); //libera la memoria dinâ€¡mica que usâ€” el getline
 }
 
-//funci—n para leer un archivo y buscar sus datos en el filtro.
+//funciâ€”n para leer un archivo y buscar sus datos en el filtro.
 void readSearch(filtro_bloom *filtro, char* archive){
 
   FILE *input = fopen(archive, "r"); //abre el archivo
 
-  char *contra = NULL;//almacenar‡ cada contrase–a, una a la vez
-  size_t contra_len = 0; //tamano de la contrase–a actual
+  char *contra = NULL;//almacenarâ€¡ cada contraseâ€“a, una a la vez
+  size_t contra_len = 0; //tamano de la contraseâ€“a actual
 
-  //ciclo que itera por cada l’nea del archivo txt
+  //ciclo que itera por cada lâ€™nea del archivo txt
   while (getline(&contra, &contra_len, input) != -1){
-    //buscar en el filtro la contrase–a que est‡ leyendo
+    //buscar en el filtro la contraseâ€“a que estâ€¡ leyendo
     if(buscar(filtro, contra)){
-      printf("Probablemente ya est‡ en el filtro: %s", contra);
+      printf("Probablemente ya estâ€¡ en el filtro: %s", contra);
     }
     else{
-      printf("Aœn no est‡ en el filtro: %s", contra);
+      printf("AÅ“n no estâ€¡ en el filtro: %s", contra);
     }
   }
 
   fclose(input); //cierra el archivo
-  free(contra); //libera la memoria din‡mica que us— el getline
+  free(contra); //libera la memoria dinâ€¡mica que usâ€” el getline
 }
 
-//funci—n para user input
+//funciâ€”n para user input
 void consoleConsulta(filtro_bloom *filtro){
 
   bool again = true;
@@ -319,17 +320,17 @@ void consoleConsulta(filtro_bloom *filtro){
   do{
     system("clear");
 
-    printf("Ingrese contrase–a a buscar: ");
+    printf("Ingrese contraseâ€“a a buscar: ");
     getline(&input, &input_len, stdin);
 
     if(buscar(filtro, input)){
-      printf("Es casi seguro que su contrase–a est‡ en el conjunto\n");
+      printf("Es casi seguro que su contraseâ€“a estâ€¡ en el conjunto\n");
     }
     else{
-      printf("Su contrase–a definitivamente no est‡ en el conjunto\n");
+      printf("Su contraseâ€“a definitivamente no estâ€¡ en el conjunto\n");
     }
 
-    printf("\nÀDesea buscar un nuevo elemento?\n");
+    printf("\nÃ€Desea buscar un nuevo elemento?\n");
     getline(&input, &input_len, stdin);
 
     if(input[0] == 'N' || input[0] == 'n'){
@@ -409,18 +410,18 @@ void tester(filtro_bloom *filtro, char *archive, char *archive2){
   printf("\n%s\n", archive);
   FILE *input = fopen(archive, "r"); //abre el archivo
 
-  char *contra = NULL;//almacenar‡ cada contrase–a, una a la vez
-  size_t contra_len = 0; //tamano de la contrase–a actual
+  char *contra = NULL;//almacenarâ€¡ cada contraseâ€“a, una a la vez
+  size_t contra_len = 0; //tamano de la contraseâ€“a actual
 
   float tp = 0; //true positives
   float fp = 0; //false positives
   float tn = 0; //true negatives
 
 
-  //ciclo que itera por cada l’nea del archivo a comprobar
+  //ciclo que itera por cada lâ€™nea del archivo a comprobar
   while(getline(&contra, &contra_len, input) != -1){
 
-    //buscar en el filtro la contrase–a que est‡ leyendo
+    //buscar en el filtro la contraseâ€“a que estâ€¡ leyendo
     if(buscar(filtro, contra)){
 
       if(helpert(filtro, archive2, contra) > 0){
@@ -446,7 +447,7 @@ void tester(filtro_bloom *filtro, char *archive, char *archive2){
   printf("\nRecall: %f", tp/120);
 
   fclose(input); //cierra el archivo
-  free(contra); //libera la memoria que us— el getline
+  free(contra); //libera la memoria que usâ€” el getline
 }
 
 //----------------------
@@ -461,10 +462,10 @@ int main(int argc, char *argv[]) {
   //leemos el archivo e insertamos sus datos en el filtro
   readInsert(filtro, "/Users/brami/Downloads/dump/datos_contras_insertar.txt");
 
-  //funci—n para bœsquedas por user input
+  //funciâ€”n para bÅ“squedas por user input
   consoleConsulta(filtro);
 
-  //Funci—n para las pruebas
+  //Funciâ€”n para las pruebas
   //tester(filtro, "/Users/brami/Downloads/Pruebas/Prueba31.txt", "/Users/brami/Downloads/dump/datos_contras_insertar.txt");
 
   return 0;
